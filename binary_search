@@ -1,0 +1,36 @@
+bool isOK(ll mid) {
+    //条件を満たすかどうか
+    if (true) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+ 
+//条件を満たす最少の数を返す
+//範囲内に条件を満たす場所が存在しない場合-1を返す
+//ng、okはどちらも範囲外に設定
+ll binary_search(ll ng, ll ok) {
+    int left = ng, right = ok;
+    while (right - left > 1) {
+        ll mid = left + (right - left) / 2;
+        //midが条件を見満たしている間right = mid
+        if (isOK(mid)) {
+            right = mid;
+        }        
+        //そうでなければleft = mid
+        else {
+            left = mid;
+        }
+    }
+    //条件を満たさない<=left < right<=条件を満たす
+    //leftは条件を満たさない最大の数、rightは条件を満たす最少の数
+    ll ans = right;
+    //ans == ok or ngである場合、条件を満たす場所は範囲外ということになる
+    if (ans == ok || ans == ng) {
+        ans = -1;
+    }
+    return ans;
+}
+

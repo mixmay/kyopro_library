@@ -1,0 +1,11 @@
+template <typename T> vector<ll> CumulativeSum(const vector<T>& ary){ 
+    int n = ary.size();
+    vector<ll> cumSum(n+1);
+    rep(i,n){
+        cumSum[i+1]=ary[i];
+    }
+    rep1(i,1,n+1){
+        cumSum[i] += cumSum[i-1];
+    }
+    return cumSum;
+}
