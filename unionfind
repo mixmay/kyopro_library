@@ -1,0 +1,43 @@
+// UnionFind
+struct UnionFind {
+    vector<int> par; // par[i] → root
+    vector<int> siz;
+    //コンストラクタ
+    UnionFind(int N) : par(N), siz(N, 1) { rep(i, N) par[i] = i; }
+
+    void init(int n) {
+        siz.assign(n, 1);
+        rep(i, n) par[i] = i;
+    }
+
+    // xの根を探索
+    int root(int x) {
+        while(x != par[x]) {
+            x = par[x];
+        }
+        return x;
+    }
+    // xとyの木を併合
+    void merge(int x, int y) {
+        int rx = root(x);
+        int ry = root(y);
+        if(rx == ry) return;
+        // x>yの順にして小さいほうを大きいほうにくっつける(経路圧縮)
+        if(siz[rx] < siz[ry]) swap(rx, ry);
+        siz[rx] += siz[ry];
+        par[ry] = rx;
+    }
+
+    //同じ木に属するかどうか
+    bool same(int x, int y) {
+        int rx = root(x);
+        int ry = root(y);
+        return rx == ry;
+    }
+
+    // xの属するグループの数
+    int size(int x) {
+        int rx = root(x);
+        return siz[rx];
+    }
+};
