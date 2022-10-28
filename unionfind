@@ -11,6 +11,7 @@ struct UnionFind {
     }
 
     // xの根を探索
+    // 経路圧縮
     int root(int x) {
         while(x != par[x]) {
             x = par[x];
