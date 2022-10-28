@@ -13,10 +13,8 @@ struct UnionFind {
     // xの根を探索
     // 経路圧縮
     int root(int x) {
-        while(x != par[x]) {
-            x = par[x];
-        }
-        return x;
+        if(par[x] == x) return x;
+        else return (par[x] = root(par[x]));
     }
     // xとyの木を併合
     void merge(int x, int y) {
