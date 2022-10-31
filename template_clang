@@ -1,3 +1,4 @@
+using namespace std;
 #include <algorithm>
 #include <cctype>
 #include <cmath>
@@ -9,6 +10,8 @@
 #include <stack>
 #include <string>
 #include <vector>
+#include <queue>
+#include <iostream>
 
 #define rep(i, n) for(int i = 0; i < n; i++)
 #define rep1(i, begin, end) for(int i = begin; i < end; i++)
@@ -35,15 +38,15 @@ constexpr long long LINF = 1e18 + 1;
 
 template <typename T>
 using min_priority_queue = priority_queue<T, vector<T>, greater<T>>;
-template <typename T> bool chmax(T &a, const T &b) {
-    if(a < b) {
+template <typename T> bool chmax(T& a, const T& b) {
+    if (a < b) {
         a = b;
         return true;
     }
     return false;
 }
-template <typename T> bool chmin(T &a, const T &b) {
-    if(a > b) {
+template <typename T> bool chmin(T& a, const T& b) {
+    if (a > b) {
         a = b;
         return true;
     }
@@ -51,13 +54,13 @@ template <typename T> bool chmin(T &a, const T &b) {
 }
 
 //デバッグ-------------------------------------------------------------------------------
-template <typename T> void dv(vector<T> &a) {
+template <typename T> void dv(vector<T>& a) {
     int siz = a.size();
-    for(int i = 0; i < siz; i++) cout << a[i] << " ";
+    for (int i = 0; i < siz; i++) cout << a[i] << " ";
     cout << endl;
 }
 
-template <typename T> void dvv(vector<vector<T>> &a) {
+template <typename T> void dvv(vector<vector<T>>& a) {
     int h = a.size();
     int w = a[0].size();
     rep(i, h) {
@@ -70,11 +73,11 @@ template <typename T> void dvv(vector<vector<T>> &a) {
     cout << endl;
 }
 
-template <class H> void debug(H &&h) {
+template <class H> void debug(H&& h) {
     cout << h << endl;
     ;
 }
-template <class H, class... Ts> void debug(H &&h, Ts &&...ts) {
+template <class H, class... Ts> void debug(H&& h, Ts &&...ts) {
     cout << h << " ";
     debug(forward<Ts>(ts)...);
 }
@@ -83,32 +86,32 @@ template <class H, class... Ts> void debug(H &&h, Ts &&...ts) {
 // ライブラリなど
 // bound-------------------------------------------------------------------------
 // lower_bound:配列に含まれるX以上の"インデックス"を返す、なければ配列外を返す(size)
-template <typename T> T LINDEX(T x, vector<T> &A) {
+template <typename T> T LINDEX(T x, vector<T>& A) {
     auto itr = lower_bound(all(A), x);
     T idx = itr - A.begin();
     return idx;
 }
 // lower_bound:配列に含まれるX以上の"値"を返す。なければ-1を返す
-template <typename T> T LVALUE(T x, vector<T> &A) {
+template <typename T> T LVALUE(T x, vector<T>& A) {
     auto itr = lower_bound(all(A), x);
     T value;
-    if(itr == A.end())
+    if (itr == A.end())
         value = -1;
     else
         value = *itr;
     return value;
 }
 // upper_bound:配列に含まれるXより大きい"インデックス"を返す、なければ配列外を返す(size)
-template <typename T> T UINDEX(T x, vector<T> &A) {
+template <typename T> T UINDEX(T x, vector<T>& A) {
     auto itr = upper_bound(all(A), x);
     T idx = itr - A.begin();
     return idx;
 }
 // upper_bound:配列に含まれるXより大きい"値"を返す、なければ-1を返す
-template <typename T> T UVALUE(T x, vector<T> &A) {
+template <typename T> T UVALUE(T x, vector<T>& A) {
     auto itr = upper_bound(all(A), x);
     T value;
-    if(itr == A.end())
+    if (itr == A.end())
         value = -1;
     else
         value = *itr;
@@ -118,9 +121,10 @@ template <typename T> T UVALUE(T x, vector<T> &A) {
 //二分探索
 bool isOK(ll mid) {
     //条件を満たすかどうか
-    if(true) {
+    if (true) {
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 }
@@ -131,12 +135,12 @@ bool isOK(ll mid) {
 //条件を満たす中で最大を求めるときはMAXをNGにMINをOKにする
 ll binary_search(ll ng, ll ok) {
     int over1 = ng, over2 = ok;
-    while(abs(ok - ng) > 1) {
+    while (abs(ok - ng) > 1) {
         ll left = min(ok, ng);
         ll right = max(ok, ng);
         ll mid = left + (right - left) / 2;
         // midが条件を見満たしている間right = mid
-        if(isOK(mid)) {
+        if (isOK(mid)) {
             ok = mid;
         }
         //そうでなければleft = mid
@@ -148,7 +152,7 @@ ll binary_search(ll ng, ll ok) {
     // leftは条件を満たさない最大の数、rightは条件を満たす最少の数
     ll ans = ok;
     //範囲外にある場合の判定
-    if(ans == over1 || ans == over2) {
+    if (ans == over1 || ans == over2) {
         ans = -1;
     }
     return ans;
@@ -160,7 +164,7 @@ ll binary_search(ll ng, ll ok) {
 // 負の距離を持つグラフの最短経路を求める
 // 負閉路判定
 class BellmanFord {
-  private:
+private:
     struct edge {
         int from;
         int to;
@@ -171,12 +175,12 @@ class BellmanFord {
     vector<long long> dist;
     const long long inf = 1LL << 60;
 
-  public:
+public:
     // コンストラクタ
     BellmanFord(int n) : v(n), dist(n) { rep(i, n) dist[i] = inf; }
     // 辺の追加
     void add_edge(int v, int u, long long cost) {
-        edges.push_back({v, u, cost});
+        edges.push_back({ v, u, cost });
     }
     // sからの最短経路を求める
     // trueであれば負閉路がある
@@ -184,15 +188,15 @@ class BellmanFord {
         dist.resize(v, inf);
         dist[s] = 0;
         int cnt = 0;
-        while(cnt < v) {
+        while (cnt < v) {
             bool update = false;
-            for(auto e : edges) {
-                if(dist[e.from] != inf && dist[e.from] + e.cost < dist[e.to]) {
+            for (auto e : edges) {
+                if (dist[e.from] != inf && dist[e.from] + e.cost < dist[e.to]) {
                     dist[e.to] = dist[e.from] + e.cost;
                     update = true;
                 }
             }
-            if(!update) break;
+            if (!update) break;
             cnt++;
         }
         return (cnt == v);
@@ -206,7 +210,7 @@ class BellmanFord {
 // 単一始点の最短経路のパスを求める
 // 最短路木を作る際に採用した辺を求める
 class Dijkstra {
-  private:
+private:
     // 辺の構造体
     struct edge {
         // to->iから隣接している頂点,index->辺のindex, cost->辺の重み
@@ -234,7 +238,7 @@ class Dijkstra {
     using dnp = tuple<long long, int, int>;
     long long inf = 1e18 + 1;
 
-  public:
+public:
     Dijkstra(long long n) : graph(n), dist(n), from(n) {
         rep(i, n) dist[i] = inf;
         rep(i, n) from[i] = -1;
@@ -246,7 +250,7 @@ class Dijkstra {
         graph[v].push_back(e);
         // 辺の情報を配列でもっておく
         // 無向グラフの場合は一度のみ追加
-        if(index == (int)edges.size()) edges.emplace_back(v, u);
+        if (index == (int)edges.size()) edges.emplace_back(v, u);
     }
 
     // sを始点に最短経路を求める
@@ -259,22 +263,22 @@ class Dijkstra {
         dist.resize(n, inf);
         from.resize(n, -1);
         // その頂点が始点なのか到達不可能なのか区別するためにindexを-2で更新
-        mpq.push({0, s, -2});
+        mpq.push({ 0, s, -2 });
 
         // 距離が近い順に探索
-        while((int)mpq.size()) {
+        while ((int)mpq.size()) {
             // [dist,v,edge_index]
             auto [d, v, ei] = mpq.top();
             mpq.pop();
-            if(dist[v] <= d) continue;
+            if (dist[v] <= d) continue;
             dist[v] = d;
             from[v] = ei;
-            if(ei >= 0) shortest_path_edges.push_back(ei);
+            if (ei >= 0) shortest_path_edges.push_back(ei);
             // 隣隣接している頂点を見る
             // [to,cost,index]
-            for(auto [u, c, i] : graph[v]) {
+            for (auto [u, c, i] : graph[v]) {
                 // 探索済みならスルー
-                if(dist[u] <= d + c) continue;
+                if (dist[u] <= d + c) continue;
                 // vまでの距離と辺のコストが距離となる
                 mpq.emplace(d + c, u, i);
             }
@@ -289,7 +293,7 @@ class Dijkstra {
 
     // 頂点xまでの最短経路が存在するか
     bool is_shortest_path(int x) {
-        if(dist[x] != inf)
+        if (dist[x] != inf)
             return true;
         else
             return false;
@@ -299,20 +303,20 @@ class Dijkstra {
     vector<tuple<int, int, int>> get_shortest_path(int x) {
         vector<tuple<int, int, int>> res;
         // その頂点には到達不可能
-        if(from[x] == -1) {
-            res.push_back({-1, -1, -1});
+        if (from[x] == -1) {
+            res.push_back({ -1, -1, -1 });
             return res;
         }
         // その頂点はスタート
-        if(from[x] == -2) {
-            res.push_back({-1, -1, -1});
+        if (from[x] == -2) {
+            res.push_back({ -1, -1, -1 });
             return res;
         }
 
         //根に戻るまで探索
-        while(from[x] >= 0) {
+        while (from[x] >= 0) {
             auto [v, u] = edges[from[x]];
-            res.push_back({x, v, u});
+            res.push_back({ x, v, u });
             x = v;
         }
         return res;
@@ -340,26 +344,26 @@ struct Eratosthenes {
         minfactor[1] = 1;
 
         //篩
-        for(int i = 2; i <= n; i++) {
+        for (int i = 2; i <= n; i++) {
 
             //古いに落とされたものはスキップ
-            if(!is_prime[i]) continue;
+            if (!is_prime[i]) continue;
 
             //素数の場合は必ずiが最小の約数での素数となる
             minfactor[i] = i;
 
-            for(int j = 2; i * j <= n; j++) {
+            for (int j = 2; i * j <= n; j++) {
                 is_prime[i * j] = false;
 
                 //合成数でまだ素数が約数となっていない場合にはiが約数となる
-                if(minfactor[i * j] == -1) minfactor[i * j] = i;
+                if (minfactor[i * j] == -1) minfactor[i * j] = i;
             }
         }
 
         // 1からNまでの素因数分解
-        for(int i = 2; i <= n; i++) {
+        for (int i = 2; i <= n; i++) {
             auto x = factorize(i);
-            for(auto y : x) {
+            for (auto y : x) {
                 primefactor[i].push_back(y);
             }
         }
@@ -370,12 +374,12 @@ struct Eratosthenes {
     // xの<約数,指数>を列挙して返す
     vector<pair<int, int>> factorize(int x) {
         vector<pair<int, int>> res;
-        while(x > 1) {
+        while (x > 1) {
             int p = minfactor[x];
             int exp = 0;
 
             // Nで割り切れる限り割る
-            while(minfactor[x] == p) {
+            while (minfactor[x] == p) {
                 x /= p;
                 ++exp;
             }
@@ -388,10 +392,10 @@ struct Eratosthenes {
     //計算量は約数の個数をnとしてO(n)
     //約数の個数は10^9までの数で n <= 1344となる
     vector<int> divisors(int x) {
-        vector<int> res({1});
+        vector<int> res({ 1 });
 
         // xが0以下のときは-1として返す
-        if(x <= 0) {
+        if (x <= 0) {
             res[0] *= -1;
             return res;
         }
@@ -400,11 +404,11 @@ struct Eratosthenes {
         auto pf = factorize(x);
 
         //約数列挙
-        for(auto p : pf) {
+        for (auto p : pf) {
             int siz = (int)res.size();
-            for(int i = 0; i < siz; i++) {
+            for (int i = 0; i < siz; i++) {
                 int v = 1;
-                for(int j = 0; j < p.second; j++) {
+                for (int j = 0; j < p.second; j++) {
                     v *= p.first;
                     res.push_back(res[i] * v);
                 }
@@ -428,14 +432,14 @@ struct Eratosthenes {
     void show_primefactor(int x) {
         cout << x << " の[素因数,指数]" << endl;
         auto pf = primefactor[x];
-        for(auto [f, i] : pf) cout << f << " " << i << endl;
+        for (auto [f, i] : pf) cout << f << " " << i << endl;
         cout << "---------------------------------" << endl;
     }
 
     // xの約数を列挙する
     void show_divisors(int x) {
         auto d = divisors(x);
-        for(auto x : d) cout << x << " ";
+        for (auto x : d) cout << x << " ";
         cout << endl;
     }
 };
@@ -485,8 +489,8 @@ struct DAG {
     bool is_dag() {
         // トポロジカルソートができればDAG,できなければ非DAGといえる
         // トポロジカルソートをしていなかったらする
-        if(!sorted) topological_sort();
-        if(dag)
+        if (!sorted) topological_sort();
+        if (dag)
             return true;
         else
             return false;
@@ -502,24 +506,24 @@ struct DAG {
         vector<bool> used((int)g.size());
         rep(i, (int)cp_indegree.size()) {
             int v = cp_indegree[i];
-            if(!v) li.push_back(i);
+            if (!v) li.push_back(i);
         }
 
         // 入次数0の頂点を消してDAGを小さくしていくことで、頂点の最大のパスの長さで緩和できる(DP)
-        for(int i = 0; i < (int)li.size(); i++) {
+        for (int i = 0; i < (int)li.size(); i++) {
             int v = li[i];
             used[v] = true;
             // 入次数のない頂点を配列に格納
             topo_sorted_list.push_back(v);
-            for(auto u : g[v]) {
+            for (auto u : g[v]) {
                 // vの出次数=uの入次数を消す
                 cp_indegree[u]--;
                 // 入次数が0ならばリストに追加
-                if(!cp_indegree[u]) {
+                if (!cp_indegree[u]) {
                     li.push_back(u);
                     // 最長経路で緩和
                     // 行き先が今のパスで緩和できる場合,親を記録
-                    if(maxdist[u] < maxdist[v] + 1) {
+                    if (maxdist[u] < maxdist[v] + 1) {
                         maxdist[u] = maxdist[v] + 1;
                         from[u] = v;
                     }
@@ -528,8 +532,8 @@ struct DAG {
         }
 
         // ソートが終わった際、すべての頂点を見ていればDAG、そうでないなら非DAG
-        for(auto v : used)
-            if(!v) dag = false;
+        for (auto v : used)
+            if (!v) dag = false;
     }
 
     //最長パスを取得する
@@ -538,7 +542,7 @@ struct DAG {
         // 最長パスの長さの末尾からfromを辿っていく
         // スタートの位置を求める
         int v = max_element(all(maxdist)) - maxdist.begin();
-        while(from[v] != v) {
+        while (from[v] != v) {
             res.push_back(v);
             v = from[v];
         }
@@ -556,14 +560,14 @@ struct DAG {
 
     // トポロジカルソートした順序を出力
     void show_topo_sorted_list() {
-        for(auto v : topo_sorted_list) cout << v << " ";
+        for (auto v : topo_sorted_list) cout << v << " ";
         cout << endl;
     }
 
     // 最長パスを出力
     void show_longestpath() {
         auto path = get_longest_path();
-        for(auto v : path) cout << v << " ";
+        for (auto v : path) cout << v << " ";
         cout << endl;
     }
 };
@@ -582,7 +586,7 @@ struct UnionFind {
 
     // xの根を探索
     int root(int x) {
-        while(x != par[x]) {
+        while (x != par[x]) {
             x = par[x];
         }
         return x;
@@ -591,9 +595,9 @@ struct UnionFind {
     void merge(int x, int y) {
         int rx = root(x);
         int ry = root(y);
-        if(rx == ry) return;
+        if (rx == ry) return;
         // x>yの順にして小さいほうを大きいほうにくっつける(経路圧縮)
-        if(siz[rx] < siz[ry]) swap(rx, ry);
+        if (siz[rx] < siz[ry]) swap(rx, ry);
         siz[rx] += siz[ry];
         par[ry] = rx;
     }
