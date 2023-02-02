@@ -92,6 +92,8 @@ set backspace=indent,eol,start
 set ambiwidth=double
 " wildmenuオプションを有効(vimバーからファイルを選択できる)
 set wildmenu
+" ヤンク時にクリップボードにもコピー
+set clipboard=unnamed
 " テンプレートのパス
 let g:sonictemplate_vim_template_dir = '~/template'
 "----------------------------------------
