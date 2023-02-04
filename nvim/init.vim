@@ -55,8 +55,11 @@ call dein#add('mattn/vim-sonictemplate')
 call dein#add('dracula/vim')
 call dein#add('pineapplegiant/spaceduck')
 
-"c++のハイライト拡張
+" c++のハイライト拡張
 call dein#add('octol/vim-cpp-enhanced-highlight')
+
+" 括弧補完プラグイン
+call dein#add('cohama/lexima.vim')
 " Finish dein initialization (required)
 call dein#end()
 
