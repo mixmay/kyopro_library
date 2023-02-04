@@ -26,6 +26,10 @@ constexpr long long LINF = 1e18 + 1;
 
 template <typename T>
 using min_priority_queue = priority_queue<T, vector<T>, greater<T>>;
+template <class H> void debug(H &&h) {cout << h << endl;;}
+template <class H, class... Ts> void debug(H &&h, Ts &&...ts) {cout << h << " ";debug(forward<Ts>(ts)...);}
+template <typename T> void dv(vector<T> &a) {int siz = a.size();for(int i = 0; i < siz; i++) cout << a[i] << " ";cout << endl;}
+template <typename T> void dvv(vector<vector<T>> &a) {int h = a.size();int w = a[0].size();rep(i, h) {rep(j, w) {cout << a[i][j];cout << " ";}cout << endl;}cout << endl;}
 //-----------------------------------------------------------------------------------------------------------------
 
 int main() {}
